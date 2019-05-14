@@ -16,6 +16,7 @@ function Rate() {
         }
         var $ = cheerio.load(body);
         var target = $(".rate-content-sight.text-right.print_hide");
+        console.log(target)
         jpRate = target[15].children[0].data;
 
         arr.push(jpRate);
@@ -25,5 +26,4 @@ function Rate() {
 
 }
 
-
-console.log(arr);
+Rate()
