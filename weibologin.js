@@ -1,8 +1,10 @@
 var request = require("request");
+var iconv = require('iconv-lite');
 
 var options = {
     method: 'GET',
     url: 'https://www.weibo.com/1983711495/Hu2vtCX63',
+    encoding: null,
     qs: { ref: 'feedsdk^', type: 'comment' },
     headers: {
         Connection: 'keep-alive',
@@ -22,6 +24,6 @@ var options = {
 
 request(options, function(error, response, body) {
     if (error) throw new Error(error);
-
-    console.log(body);
+    let comment = iconv.decode(body, 'utf-8');
+    console.log(comment);
 });
