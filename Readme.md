@@ -18,7 +18,7 @@ var findSlashClass = htmlContent.match(/\"_blank\"/);
 //符合就用正常格式取代
 if(findSlashClass){
     var normalClass = matched[0].replace(/(\\n|\\t|\\r)/g," ").replace(/\\/g,"");
-    var result = "<div class= "+ normalClass ;
+    略
     var $ = cheerio.load(result);
 }
 
