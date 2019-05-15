@@ -15,8 +15,11 @@ Ex. class="\"_blank\""
 //先找符合上述字串
 var findSlashClass = htmlContent.match(/\"_blank\"/);
 
+//程式碼不能全部一起爬 只能分段
+
 //符合就用正常格式取代
 if(findSlashClass){
+    //取代所有多的 \r \n \t 換成空格, 取代所有反斜線換成""
     var normalClass = matched[0].replace(/(\\n|\\t|\\r)/g," ").replace(/\\/g,"");
     略
     var $ = cheerio.load(result);

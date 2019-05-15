@@ -21,23 +21,18 @@ var options = {
     }
 };
 
-getAllCities().then((cities) => {
-    console.log(cities);
+request(options, function(error, response, body) {
+    if (error) throw new Error(error);
+    var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ").replace(/\\/g, "");
+    //normalBody = normalBody.match(/\"WB_text\sW_f14(\S*)/)[1];
+    console.log(normalBody)
 
-})
+    var $ = cheerio.load(normalBody);
+    //console.log($)
+    var articleTitle = $("title").text();
+    var articleContent = $(".WB_innerwrap").text();
+    console.log(articleTitle)
+    console.log(articleContent)
+        //console.log(articleTitle);
 
-function getAllCities() {
-    return new Promise((resolve, reject) => {
-        request(options, (err, res, body) => {
-            var $ = cheerio.load(body);
-            var cities = $(".WB_text.W_f14")
-                .map((index, obj) => {
-                    return $(obj)
-                        .text()
-                        .trim();
-                })
-                .get();
-            resolve(cities);
-        });
-    });
-}
+});
