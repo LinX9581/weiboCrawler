@@ -23,19 +23,26 @@ var options = {
 
 request(options, function(error, response, body) {
     if (error) throw new Error(error);
-    var findSlashClass = body.match(/\"WB_text\sW_f14*\\"/gm);
-    //console.log(findSlashClass)
-    if (findSlashClass) {
-        var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ").replace(/\\/g, "");
-        //normalBody = normalBody.match(/\"WB_text\sW_f14(\S*)/)[1];
-        console.log(normalBody)
+    //  \/ 判斷是否有反斜線
+    var matched = body.match(/\"WB_feed_detail\sclearfix*\\\"\/"anibox\sUI_ani>/gm);
+    console.log(matched)
 
-        var $ = cheerio.load(normalBody);
-        //console.log($)
-        var articleTitle = $("title").text();
-        var articleContent = $(".WB_innerwrap").text();
-        console.log(articleTitle)
-        console.log(articleContent)
-            //console.log(articleTitle);
-    }
+    var findSlashClass = body.match(/\"WB_feed_detail\sclearfix\"/gm);
+    console.log(findSlashClass)
+    console.log("asd")
+        //var findSlashClass = body.match(/\"WB_text\sW_f14*\\"/gm);
+        //console.log(findSlashClass)
+        // if (findSlashClass) {
+        // var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ").replace(/\\/g, "");
+        //normalBody = normalBody.match(/\"WB_text\sW_f14(\S*)/)[1];
+        //console.log(normalBody)
+
+    // var $ = cheerio.load(normalBody);
+    //console.log($)
+    // var articleTitle = $("title").text();
+    // var articleContent = $(".WB_innerwrap").text();
+    // console.log(articleTitle)
+    // console.log(articleContent)
+    //console.log(articleTitle);
+    // }
 });

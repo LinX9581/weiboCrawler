@@ -9,21 +9,25 @@ get nodejs request code
 其中有一行會壓縮程式碼 讓nodejs跑出來變亂碼  
 'accept-encoding': 'gzip, deflate, br'  
 
-# 1.需要去掉每個屬性的反斜線...
+# 1.去掉整個程式的 \"\" \r\r\r\r \n\n\n\n\n \t\t\t\t\t\t\t
+
+取代所有多的 \r \n \t 換成空格, 取代所有反斜線換成""
 <pre>
-Ex. class="\"_blank\""  
-//先找符合上述字串
-var findSlashClass = htmlContent.match(/\"_blank\"/);
+var normalBody = matched[0].replace(/(\\n|\\t|\\r)/g," ").replace(/\\/g,"");
+</pre>
 
-//程式碼不能全部一起爬 只能分段
+但清乾淨後 cheerio會爬不到 原因不明Q  
+<pre>
+var $ = cheerio.load(normalBody);
+</pre>
 
-//符合就用正常格式取代
-if(findSlashClass){
-    //取代所有多的 \r \n \t 換成空格, 取代所有反斜線換成""
-    var normalClass = matched[0].replace(/(\\n|\\t|\\r)/g," ").replace(/\\/g,"");
-    略
-    var $ = cheerio.load(result);
-}
+只能用regex擷取片段再爬取  
+Ex. /className.*className/  
+
+之後才能爬取文章內文  
+<pre>
+var articleContent = $(".WB_text.W_f14").text();  
+</pre>
 
 </pre>
 # 2.解決瀑布流加載文章  
