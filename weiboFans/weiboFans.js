@@ -23,16 +23,18 @@ var options = {
 request(options, function(error, response, body) {
     if (error) throw new Error(error);
 
-    var matched = body.match(/\"follow_list\s*\\\".*\/ul>/gm);
+    //爬取\"WB_innerwrap 到 /table 之間的元素
+    var matched = body.match(/\"WB_innerwrap*\\\".*\/table>/gm);
+    // console.log(matched)
 
-    console.log(matched)
     if (matched) {
-        var str = matched[0].replace(/(\\n|\\t|\\r)/g, " ").replace(/\\/g, "");
-        var ulStr = "<ul class=" + str;
+        // \r \n \t 換成空格, 反斜線換成""
+        var fansTable = matched[0].replace(/(\\n|\\t|\\r)/g, " ").replace(/\\/g, "");
+        //console.log(fansTable);
+        var $ = cheerio.load(fansTable)
 
-        var $ = cheerio.load(ulStr);
-        var b = $(".S_line1 .W_f16").text();
-        console.log(b)
-
+        //eq(0) 關注 , eq(1) 粉絲 , eq(2) 微博
+        var weiboFans = $("strong.W_f16").eq(1).text()
+        console.log("粉絲人數" + weiboFans)
     }
 });
