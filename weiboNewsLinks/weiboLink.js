@@ -20,37 +20,21 @@ var options = {
         authority: 'www.weibo.com'
     }
 };
-getArticleLink().then((articleLink) => {
-    console.log(articleLink);
 
-})
+request(options, function(error, response, body) {
+    if (error) throw new Error(error);
+    var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ");
+    // console.log(normalBody)
+    // \\=\  .=任何字元 但碰到\n會中止yy
+    var rangeBody = normalBody.match(/PCD_pictext_i_v5.*/gm);
+    // console.log(rangeBody)
+    var cleanRangeBody = rangeBody[0].replace(/\\/g, "");
+    // console.log(cleanRangeBody)
 
-
-function getArticleLink() {
-    return new Promise((resolve, reject) => {
-        request(options, (err, res, body) => {
-            var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ");
-            // console.log(normalBody)
-            // \\=\  .=任何字元 但碰到\n會中止
-            var rangeBody = normalBody.match(/PCD_pictext_i_v5.*/gm);
-            // console.log(rangeBody)
-            var cleanRangeBody = rangeBody[0].replace(/\\/g, "");
-            // console.log(cleanRangeBody)
-            var $ = cheerio.load(cleanRangeBody);
-            // $('.pt_ul.clearfix').find('div.UG_list_b').each(function(i, item) {
-
-            //     var articleLinks = $(item).attr('href')
-            //         // console.log(articleLinks)
-            //     return $(item).attr('href');
-            // });
-            // resolve($(item).attr('href'));
-
-            var articleLink = $(".pt_ul.clearfix div.UG_list_b")
-                .map((index, obj) => {
-                    return $(obj).attr('href');
-                })
-                .get();
-            resolve(articleLink);
-        })
-    })
-}
+    var $ = cheerio.load(cleanRangeBody);
+    var articleLink = $(".pt_ul.clearfix").find('div.UG_list_b').attr('href');
+    $('.pt_ul.clearfix').find('div.UG_list_b').each(function(i, item) {
+        var articleLinks = $(item).attr('href')
+        console.log(articleLinks)
+    });
+});
