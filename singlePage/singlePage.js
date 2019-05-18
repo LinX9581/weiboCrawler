@@ -3,7 +3,7 @@ var cheerio = require("cheerio");
 
 var options = {
     method: 'GET',
-    url: 'https://www.weibo.com/1883881851/Hu6YjkvMu',
+    url: 'https://weibo.com/1984373641/HuBZL6UKi?ref=feedsdk',
     qs: { ref: 'feedsdk^', type: 'comment' },
     headers: {
         Connection: 'keep-alive',
