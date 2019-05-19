@@ -1,11 +1,11 @@
 # Weibo Crawler
 git clone https://github.com/LinX9581/weiboCrawler.git  
 cd weiboCraawler && npm i  
-文章內容  
+* 文章內容  
 node weibonews.js  
-文章連結  
+* 文章連結  
 cd weuboNewsLinks && node weiboLinks  
-nownews 粉絲數  
+* nownews 粉絲數  
 cd weiboFans && node weiboFans.js  
 
 
@@ -22,25 +22,22 @@ get nodejs request code
 
 # 去掉整個程式的 \"\" \r\r\r\r \n\n\n\n\n \t\t\t\t\t\t\t
 
-取代所有多的 \r \n \t 換成空格, 取代所有反斜線換成""
+* 取代所有多的 \r \n \t 換成空格, 取代所有反斜線換成""
 ``` javascript
 var normalBody = matched[0].replace(/(\\n|\\t|\\r)/g," ").replace(/\\/g,"");
-```
-
-``` javascript
 var $ = cheerio.load(normalBody);
 ```
 
-再用regex擷取片段再爬取  
-直接爬爬不出來原因不明Q  
-Ex. /className.*className/  
-
-爬取文章內文  
+* 再用regex擷取片段再爬取 直接爬爬不出來原因不明Q  
+``` javascript
+var rangeBody = normalBody.match(/WB_feed_detail.*anibox\sUI_ani/gm);
+```
+* 爬取文章內文  
 ``` javascript
 var articleContent = $(".WB_text.W_f14").text();  
 ```
 
-Chrome Console 加入Jquery  
+* Chrome Console 加入Jquery  
 <pre>
 var jqry = document.createElement('script');
 jqry.src = "https://code.jquery.com/jquery-3.3.1.min.js";
