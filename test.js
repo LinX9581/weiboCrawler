@@ -3,7 +3,7 @@ const cheerio = require('cheerio')
 const puppeteer = require('puppeteer')
 
 /* 定义函数 */
-getListData(1)
+
 let getListData = async function(Category) {
     /* 初始化 puppeteer*/
     const browser = await puppeteer.launch({
@@ -18,7 +18,7 @@ let getListData = async function(Category) {
             url = 'https://www.toutiao.com/ch/news_game/'
             break;
         case '1':
-            url = 'https://www.toutiao.com/ch/news_entertainment/'
+            url = 'https://www.weibo.com/tw?category=NBA'
             break;
         case '2':
             url = 'https://www.toutiao.com/ch/news_history/'
@@ -27,48 +27,59 @@ let getListData = async function(Category) {
             url = 'https://www.toutiao.com/ch/news_finance/'
             break;
     }
-    //打开页面
+
     await page.goto(url)
-        //定义页面内容及Jquery
-    var content, $
-        /* 页面滚动方法 */
-    async function scrollPage(i) {
-        content = await page.content();
-        $ = cheerio.load(content);
-        /*执行js代码（滚动页面）*/
-        await page.evaluate(function() {
-                /* 这里做的是渐进滚动，如果一次性滚动则不会触发获取新数据的监听 */
-                for (var y = 0; y <= 1000 * i; y += 100) {
-                    window.scrollTo(0, y)
+
+    var scrollTimer = page.evaluate(() => {
+        return new Promise((resolve, reject) => {
+            var totalHeight = 0
+            var distance = 600
+            var timer = setInterval(() => {
+                window.scrollBy(0, distance)
+                totalHeight += distance
+
+                if (totalHeight >= document.body.scrollHeight) {
+                    clearInterval(timer)
+                    resolve()
                 }
-            })
-            // 获取数据列表
-        const li = $($('.feedBox').find('ul')[0]).find('li')
-        return li
-    }
-    let i = 0
-    let li = await scrollPage(++i)
-        //如果数据列表 不够30 则一直获取
-    while (li.length < 30) {
-        li = await scrollPage(++i)
-    }
-    let data = {
-            list: []
-        }
-        /* 封装返回的数据*/
-    li.map(function(index, item) {
-            $(item).find('img').attr('src') != undefined ?
-                data.list.push({
-                    src: $(item).find('img').attr('src'),
-                    title: $($(item).find('.title')).text(),
-                    source: $($(item).find('.source')).text(),
-                    href: $($(item).find('.title')).attr('href')
-                }) : ''
+            }, 200)
         })
-        //顺手存入本地文件
-    fs.writeFileSync('tt.JSON', JSON.stringify(data))
-    fs.writeFileSync('tt.html', content)
-        /* 关闭 puppeteer*/
-    await browser.close()
-    return data
+
+    })
+
+    var crawler = scrollTimer.then(async() => {
+        var urls = await page.evaluate(() => {
+            body = await page.content();
+
+            // console.log(body)
+            var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ");
+            // console.log(normalBody)
+            // \\=\  .=任何字元 但碰到\n會中止yy
+            var rangeBody = normalBody.match(/PCD_pictext_i_v5.*/gm);
+            // console.log(rangeBody)
+            var cleanRangeBody = rangeBody[1].replace(/\\/g, "");
+            // console.log(cleanRangeBody)
+            var $ = cheerio.load(cleanRangeBody);
+
+            var articleLink = $(".pt_ul.clearfix div.UG_list_b")
+                .map((index, obj) => {
+                    return $(obj).attr('href');
+                })
+                .get();
+            console.log(articleLink)
+            return articleLink
+
+        })
+
+        await page.close()
+        return Promise.resolve(urls)
+    }).catch((e) => {
+        console.log(e)
+    })
+
+    crawler.then(urls => {
+        console.log(urls)
+    })
+
 }
+getListData('1')
