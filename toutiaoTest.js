@@ -7,7 +7,7 @@ let getlinks = async function() {
     });
 
     const page = await browser.newPage();
-    await page.goto("https://m.tw.weibo.com/pic/nba");
+    await page.goto("https://www.toutiao.com/ch/news_game/");
 
     async function autoScroll(page) {
         await page.evaluate(function() {
@@ -25,23 +25,13 @@ let getlinks = async function() {
     }
     request = async() => {
         body = await page.content();
-        // console.log(body)
-        var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ");
-        // console.log(normalBody)
-        // \\=\  .=任何字元 但碰到\n會中止yy
-        var rangeBody = normalBody.match(/PCD_pictext_i_v5.*/gm);
-        // console.log(rangeBody)
-        var cleanRangeBody = rangeBody[1].replace(/\\/g, "");
-        // console.log(cleanRangeBody)
-        var $ = cheerio.load(cleanRangeBody);
-
-        var articleLink = $(".pt_ul.clearfix div.UG_list_b")
+        $ = cheerio.load(body);
+        var links = $(".title-box .link.title")
             .map((index, obj) => {
-                return $(obj).attr('href');
+                return $(obj).attr("href");
             })
             .get();
-        console.log(articleLink)
-
+        console.log(links + "\n");
     }
 
     await autoScroll(page);

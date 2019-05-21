@@ -2,7 +2,8 @@
 git clone https://github.com/LinX9581/weiboCrawler.git  
 cd weiboCraawler && npm i  
 * 文章內容  
-node weibonews.js  
+node weiboNews.js  
+
 * 文章連結  
 cd weuboNewsLinks && node weiboLinks  
 * nownews 粉絲數  
@@ -65,8 +66,21 @@ console.log("內容：" + articleContent + "\n");
 [NBA分類] (https://www.weibo.com/tw?category=NBA)  
 * F12找規則Q  
 * pupeteer模擬登入  
-滑到要爬的時間範圍區間  
+[官方範本] (https://github.com/GoogleChrome/puppeteer)
 
-# async promis map 效能測試
+下滑到一定區間再爬  
+``` javascript
+await page.evaluate(function() {
+    var totalHeight = 0;
+    var distance = 100;
+    var timer = setInterval(() => {
+        var scrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+        if (totalHeight >= 6000) {
+            clearInterval(timer);
+        }
+}, 100);
+```
 
 # 改爬行動端Q

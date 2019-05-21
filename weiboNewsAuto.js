@@ -1,17 +1,14 @@
-const fs = require('fs')
 const cheerio = require('cheerio')
 const puppeteer = require('puppeteer')
 
-/* 定义函数 */
-
 let getListData = async function(Category) {
-    /* 初始化 puppeteer*/
+
     const browser = await puppeteer.launch({
-            headless: false //这个是 是否打开chrome可视化窗口 true是不打开 false是打开
-        })
-        //获取page实例
+        headless: false //false 開啟瀏覽器 , ture 背景執行
+    })
+
     const page = await browser.newPage()
-        //我这里是通过 入参传过来的 分类来判断抓取相应页面的数据
+
     let url = ''
     switch (Category) {
         case '0':
@@ -43,9 +40,10 @@ let getListData = async function(Category) {
                 }
             }, 100);
         })
+    }
 
+    getNewsLink = async() => {
         body = await page.content();
-
         // console.log(body)
         var normalBody = body.replace(/(\\n|\\t|\\r)/g, " ");
         // console.log(normalBody)
@@ -62,13 +60,19 @@ let getListData = async function(Category) {
             })
             .get();
         console.log(articleLink)
-        return articleLink
     }
-    autoScroll(page).then(articleLink => {
-            console.log(articleLink);
-        })
-        // autoScroll().then((page) => {
-        //     console.log(page)
-        // })
+
+
+    await autoScroll(page)
+    await (sleep(10000));
+    await getNewsLink()
+
+    // sleep = (ms) => {
+    //     return new Promise(resolve => setTimeout(resolve, ms))
+    // }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }
 getListData('1')
