@@ -1,3 +1,4 @@
+https://www.youtube.com/watch?v=rlX2ZZkrloU&list=UUg8EwsqYmiw7G267xxPyXsg&index=1
 # Weibo Crawler
 git clone https://github.com/LinX9581/weiboCrawler.git  
 cd weiboCraawler && npm i  
